@@ -2,7 +2,7 @@
 
 ## Project Description 🌟
 
-The **Deep Research Agent** is a powerful AI-driven Agent built with **Streamlit** and **LangGraph**, designed to conduct comprehensive research on user-specified topics within a chosen domain. It generates targeted research questions, performs in-depth analysis using AI-powered tools, and compiles findings into a professional, McKinsey-style HTML report, seamlessly saved to **Google Docs**. Leveraging the `composio_langgraph` library for tool integration and `langchain_groq` for language model interactions, this tool is perfect for researchers, analysts, or anyone seeking structured, high-quality insights. 🚀
+This is a powerful AI-driven Multi-Agent built with **Streamlit** and **LangGraph**, designed to conduct comprehensive research on user-specified topics within a chosen domain. It generates targeted research questions, performs in-depth analysis using AI-powered tools, and compiles findings into a professional, McKinsey-style HTML report, seamlessly saved to **Google Docs**. Leveraging the `composio_langgraph` library for tool integration and `langchain_groq` for language model interactions, this tool is perfect for researchers, analysts, or anyone seeking structured, high-quality insights. 🚀
 
 With support for follow-up questions, it enables iterative refinement of research, making it a versatile solution for professional and academic use. 📊
 
