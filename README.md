@@ -100,6 +100,20 @@ We welcome contributions! Follow these steps to contribute:
 4. Push to the branch (`git push origin feature/your-feature`) 🚀.
 5. Open a pull request 📬.
 
+## Maintenance & Support 🛡️
+
+**Current Version:** 1.0.0
+
+**Roadmap:**
+- Bug fixes and stability improvements
+- Enhanced multi-agent collaboration
+- More research domains and question types
+- Advanced report customization
+- Additional integrations (e.g., Notion, Slack)
+
+**How to Report Issues:**
+- Please use the [GitHub Issues](https://github.com/zeeshier/deep-research-agent/issues) page to report bugs, request features, or ask for help.
+- Include clear steps to reproduce, expected behavior, and screenshots/logs if possible.
 ## License 📜
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
@@ -107,3 +121,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Contact 📧
 
 For questions or feedback, open an issue on GitHub or contact the maintainer at [zeeshanwarraich51@gmail.com]. We'd love to hear from you! 😊
+
