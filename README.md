@@ -18,16 +18,23 @@ With support for follow-up questions, it enables iterative refinement of researc
 ## Project Structure 📂
 
 ```plaintext
-├── app.py                  # Main Streamlit application 🚀
-├── graph.py                # LangGraph workflow configuration 🔄
-├── state.py                # Graph state definition 🧮
-├── nodes/nodes.py          # Agent and tool nodes for the workflow 🤖
-├── tools/composio_tools.py # Composio toolset configuration 🛠️
-├── tools/llm.py            # Language model setup 🗣️
-├── prompts.py              # System prompt for the research agent 📜
-├── .env                    # Environment variables 🔒
+├── notebook/deep_research.ipynb #notebook file
+├── src/app.py                  # Main Streamlit application 
+├── src/graph.py                # LangGraph workflow configuration 
+├── src/state.py                # Graph state definition 
+├── src/nodes/nodes.py          # Agent and tool nodes for the workflow 
+├── src/tools/composio_tools.py # Composio toolset configuration 
+├── src/tools/llm.py            # Language model setup 
+├── src/prompts.py              # System prompt for the research agent 
+├── .env                    # Environment variables 
+├── requirements.txt #dependencies
+├── License #license file
+├── .gitignore #gitignore for env
+├── . gitattributes #text= auto for normalization 
 └── README.md               # Project documentation 📖
 ```
+
+
 
 
 ## Tech Stack 🛠️
