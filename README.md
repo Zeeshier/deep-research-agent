@@ -1,11 +1,10 @@
 # Deep Research Agent 🧠📚
 
-## Project Description 🌟
+## Project Overview 🌟
 
 This is a powerful AI-driven Multi-Agent built with **Streamlit** and **LangGraph**, designed to conduct comprehensive research on user-specified topics within a chosen domain. It generates targeted research questions, performs in-depth analysis using AI-powered tools, and compiles findings into a professional, McKinsey-style HTML report, seamlessly saved to **Google Docs**. Leveraging the `composio_langgraph` library for tool integration and `langchain_groq` for language model interactions, this tool is perfect for researchers, analysts, or anyone seeking structured, high-quality insights. 🚀
 
 With support for follow-up questions, it enables iterative refinement of research, making it a versatile solution for professional and academic use. 📊
-
 ## Features ✨
 
 - **Input Flexibility** 📝: Specify a research topic and domain (e.g., Health, Technology) via an intuitive Streamlit web interface.
@@ -15,17 +14,7 @@ With support for follow-up questions, it enables iterative refinement of researc
 - **Google Docs Integration** 📑: Automatically saves reports to Google Docs using `GOOGLEDOCS_CREATE_DOCUMENT_MARKDOWN`.
 - **Interactive Follow-Ups** 🔄: Ask follow-up questions to refine or expand research results.
 - **State Management** 🧮: Employs LangGraph for seamless workflow orchestration and memory management.
-
-## Tech Stack 🛠️
-
-- **Python** 🐍: Core programming language.
-- **Streamlit** 🌐: Powers the interactive web interface.
-- **LangGraph** 🔗: Manages research workflow and state.
-- **LangChain (langchain_groq)** 🤝: Interacts with the Meta LLaMA model.
-- **Composio** 🔧: Enables web search (`COMPOSIO_SEARCH_TAVILY_SEARCH`) and Google Docs integration (`GOOGLEDOCS_CREATE_DOCUMENT_MARKDOWN`).
-- **dotenv** 🔒: Securely manages API keys.
-- **MemorySaver** 💾: Checkpoints and maintains research context across sessions.
-
+- 
 ## Project Structure 📂
 
 ```plaintext
@@ -39,6 +28,19 @@ With support for follow-up questions, it enables iterative refinement of researc
 ├── .env                    # Environment variables 🔒
 └── README.md               # Project documentation 📖
 ```
+
+
+## Tech Stack 🛠️
+
+- **Python** 🐍: Core programming language.
+- **Streamlit** 🌐: Powers the interactive web interface.
+- **LangGraph** 🔗: Manages research workflow and state.
+- **LangChain (langchain_groq)** 🤝: Interacts with the Meta LLaMA model.
+- **Composio** 🔧: Enables web search (`COMPOSIO_SEARCH_TAVILY_SEARCH`) and Google Docs integration (`GOOGLEDOCS_CREATE_DOCUMENT_MARKDOWN`).
+- **dotenv** 🔒: Securely manages API keys.
+- **MemorySaver** 💾: Checkpoints and maintains research context across sessions.
+
+
 
 ## Installation 🛠️
 
