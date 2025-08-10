@@ -1,133 +1,320 @@
-# Deep Research Agent 🧠📚
+# Deep Research Agent 🧠
 
-## Project Overview 🌟
 
-This is a powerful AI-driven Multi-Agent built with **Streamlit** and **LangGraph**, designed to conduct comprehensive research on user-specified topics within a chosen domain. It generates targeted research questions, performs in-depth analysis using AI-powered tools, and compiles findings into a professional, McKinsey-style HTML report, seamlessly saved to **Google Docs**. Leveraging the `composio_langgraph` library for tool integration and `langchain_groq` for language model interactions, this tool is perfect for researchers, analysts, or anyone seeking structured, high-quality insights. 🚀
+---
 
-With support for follow-up questions, it enables iterative refinement of research, making it a versatile solution for professional and academic use. 📊
-## Features ✨
+## Introduction 🌟
 
-- **Input Flexibility** 📝: Specify a research topic and domain (e.g., Health, Technology) via an intuitive Streamlit web interface.
-- **Automated Question Generation** ❓: Generates three specific yes/no research questions tailored to the topic and domain.
-- **AI-Powered Research** 🤖: Uses the Meta LLaMA model and `COMPOSIO_SEARCH_TAVILY_SEARCH` for real-time web searches to gather accurate data.
-- **Professional Reporting** 📄: Compiles findings into a polished, HTML-formatted, McKinsey-style report.
-- **Google Docs Integration** 📑: Automatically saves reports to Google Docs using `GOOGLEDOCS_CREATE_DOCUMENT_MARKDOWN`.
-- **Interactive Follow-Ups** 🔄: Ask follow-up questions to refine or expand research results.
-- **State Management** 🧮: Employs LangGraph for seamless workflow orchestration and memory management.
-- 
-## Project Structure 📂
+The Deep Research Agent is a sophisticated multi-agent system designed to conduct comprehensive research on user-specified topics within a chosen domain. It leverages AI-driven tools, including the Meta LLaMA model, to generate targeted research questions, perform in-depth analysis, and compile findings into a professional report. This project demonstrates the system's production readiness, safety, and usability, making it an ideal tool for researchers, analysts, and professionals seeking data-driven insights.
 
-```plaintext
-├── notebook/deep_research.ipynb #notebook file
-├── src/app.py                  # Main Streamlit application 
-├── src/graph.py                # LangGraph workflow configuration 
-├── src/state.py                # Graph state definition 
-├── src/nodes/nodes.py          # Agent and tool nodes for the workflow 
-├── src/tools/composio_tools.py # Composio toolset configuration 
-├── src/tools/llm.py            # Language model setup 
-├── src/prompts.py              # System prompt for the research agent 
-├── .env                    # Environment variables 
-├── requirements.txt #dependencies
-├── License #license file
-├── .gitignore #gitignore for env
-├── . gitattributes #text= auto for normalization 
-└── README.md               # Project documentation 📖
+## Project Overview 📝
+
+The Deep Research Agent is a powerful, AI-powered tool for conducting deep research. It integrates the Meta LLaMA large language model with external tools like Tavily for web searches, ensuring accurate and up-to-date information. The system is built to be user-friendly, supporting iterative research refinement through a Streamlit-based interface. It automates the entire research pipeline, from question generation to report creation and storage in Google Docs.
+
+<img src="images\screenshot.png" alt="screenshot" width="700" height ="370"  />
+
+
+### Project Structure 🗂️
+
+The project is organized in a clean, modular structure for easy maintenance and scalability. Here's the directory tree:
+
+```
+deep-research-agent/
+├── .env.example          # Example environment variables file for configuration
+├── .gitignore            # Git ignore file to exclude unnecessary files
+├── .gitattributes        # Git attributes for handling file types
+├── LICENSE               # Project license file (e.g., MIT or Apache)
+├── README.md             # Main README with setup instructions and usage
+├── Dockerfile            # Docker configuration for containerization
+├── docker-compose.yml    # Docker Compose for multi-container setups
+├── pytest.ini            # Configuration for pytest testing framework
+├── requirements.txt      # List of Python dependencies
+├── notebook/             # Jupyter notebooks for experimentation
+│   └── deep_research.ipynb  # Notebook for interactive deep research demos
+├── tests/                # Test suite directory
+│   ├── __init__.py       # Init file for tests package
+│   ├── conftest.py       # Pytest fixtures and configurations
+│   ├── unit/             # Unit tests
+│   │   ├── __init__.py
+│   │   ├── test_nodes.py  # Tests for individual nodes
+│   │   └── test_tools.py  # Tests for tools like LLM and Composio
+│   ├── integration/      # Integration tests
+│   │   ├── __init__.py
+│   │   └── test_workflow.py  # Tests for workflow integration
+│   └── system/           # System/end-to-end tests
+│       ├── __init__.py
+│       └── test_e2e.py   # Full system tests including UI
+└── src/                  # Source code directory
+    ├── __init__.py       # Init file for src package
+    ├── app.py            # Streamlit application entry point
+    ├── graph.py          # LangGraph workflow definition
+    ├── state.py          # State management for the agent
+    ├── monitoring/       # Monitoring tools
+    │   ├── __init__.py
+    │   ├── logger.py     # Custom logging module
+    │   └── metrics.py    # Metrics tracking (e.g., performance)
+    ├── guardrails/       # Safety and validation modules
+    │   ├── __init__.py
+    │   ├── input_validator.py  # Input validation logic
+    │   └── prompt_injection.py # Prompt injection detection
+    ├── nodes/            # Agent nodes (research steps)
+    │   ├── __init__.py
+    │   └── nodes.py      # Definitions of nodes like research_agent_node
+    ├── tools/            # AI tools and integrations
+    │   ├── __init__.py
+    │   ├── llm.py        # LLM wrapper (e.g., for Meta LLaMA)
+    │   └── composio_tools.py  # Tools for external integrations like Google Docs
+    └── prompts.py        # Prompt templates for the LLM
 ```
 
+This structure follows best practices: separating concerns into source code, tests, and documentation.
 
+### Key Features ✨
 
+- **Input Flexibility** 📝: Users can specify a research topic and domain via an intuitive Streamlit web interface, allowing for customized research.
+- **Automated Question Generation** ❓: The system generates specific yes/no research questions tailored to the topic and domain, ensuring focused analysis.
+- **AI-Powered Research** 🤖: Utilizes the Meta LLaMA model for reasoning and Tavily for real-time web searches to gather accurate, verifiable data.
+- **Professional Reporting** 📄: Compiles findings into a polished, HTML-formatted report styled like McKinsey consulting reports, with sections for executive summary, findings, and recommendations.
+- **Google Docs Integration** 📑: Automatically exports and saves reports to Google Docs for easy sharing and collaboration.
+- **State Management** 🧮: Leverages LangGraph for orchestrating the multi-agent workflow, maintaining state across steps for seamless execution and memory retention.
 
-## Tech Stack 🛠️
+## Flowchart 📈
 
-- **Python** 🐍: Core programming language.
-- **Streamlit** 🌐: Powers the interactive web interface.
-- **LangGraph** 🔗: Manages research workflow and state.
-- **LangChain (langchain_groq)** 🤝: Interacts with the Meta LLaMA model.
-- **Composio** 🔧: Enables web search (`COMPOSIO_SEARCH_TAVILY_SEARCH`) and Google Docs integration (`GOOGLEDOCS_CREATE_DOCUMENT_MARKDOWN`).
-- **dotenv** 🔒: Securely manages API keys.
-- **MemorySaver** 💾: Checkpoints and maintains research context across sessions.
+Below is a flowchart illustrating the workflow of the Deep Research Agent. It starts with user input, proceeds through question generation, research, and ends with report creation and storage.
 
+<img src="images\flowchart.png" alt="flowchart" height ="600" width="400" text-align:center  />
 
+The workflow is cyclic if refinements are needed, ensuring iterative improvement.
 
-## Installation 🛠️
+## Enhancements for Production-Readiness 🛠️
 
-1. **Clone the Repository** 📥:
-   ```bash
-   git clone https://github.com/zeeshier/deep-research-agent.git
-   cd deep-research-agent
-   ```
+### Testing 🧪
 
-2. **Set Up a Virtual Environment** 🌍:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+Comprehensive testing ensures reliability. Tests are divided into unit, integration, and system levels using pytest.
 
-3. **Install Dependencies** 📦:
-   ```bash
-   pip install streamlit langgraph langchain-groq composio-langgraph python-dotenv
-   ```
+#### Unit Tests
 
-4. **Configure Environment Variables** 🔑:
-   Create a `.env` file in the project root and add your Groq API key:
-   ```plaintext
-   GROQ_API_KEY=your_groq_api_key
-   ```
+Unit tests isolate and verify individual components.
 
-5. **Run the Application** 🚀:
-   ```bash
-   streamlit run app.py
-   ```
+```python
+# tests/unit/test_nodes.py
+from src.nodes.nodes import research_agent_node
 
-## Usage 🎯
+def test_research_agent_node_returns_dict():
+    state = {"topic": "AI in health", "domain": "Health"}
+    result = research_agent_node(state)
+    assert isinstance(result, dict)
+    assert "questions" in result or "report" in result
+```
 
-1. Open the app in your browser (default: `http://localhost:8501`) 🌐.
-2. Enter a research topic (e.g., "AI in healthcare") and domain (e.g., "Health") 📝.
-3. Click **Start Research** to generate questions and answers 🔍.
-4. View the professional report, automatically saved to Google Docs 📑.
-5. Ask follow-up questions to refine or expand the research 🔄.
+**Explanation**: This test checks if the `research_agent_node` function processes a state dictionary (containing topic and domain) and returns a dictionary with expected keys like "questions" or "report". It ensures the node outputs the correct data structure without side effects.
 
-## Example 📈
+#### Integration Tests
 
-**Input**:
-- Topic: AI-powered diagnostic tools
-- Domain: Health
+Integration tests verify component interactions.
 
-**Output**:
-- **Research Questions** ❓:
-  1. Are AI-powered diagnostic tools widely adopted in hospitals by 2025?
-  2. Do AI diagnostic tools improve patient outcomes compared to traditional methods?
-  3. Are there significant regulatory barriers to adopting AI diagnostic tools?
-- **Report** 📄: A detailed HTML report with findings, saved to Google Docs.
+```python
+# tests/integration/test_workflow.py
+from src.graph import build_graph
 
-## Contributing 🤝
+def test_workflow_end_to_end():
+    graph = build_graph()
+    state = graph.invoke({"topic": "AI in health", "domain": "Health"})
+    assert "report" in state
+    assert "<html>" in state["report"].lower()
+```
 
-We welcome contributions! Follow these steps to contribute:
-1. Fork the repository 🍴.
-2. Create a new branch (`git checkout -b feature/your-feature`) 🌿.
-3. Commit your changes (`git commit -m "Add your feature"`) ✅.
-4. Push to the branch (`git push origin feature/your-feature`) 🚀.
-5. Open a pull request 📬.
+**Explanation**: This test builds the full LangGraph workflow, invokes it with sample input, and asserts that the output state includes a "report" key with HTML content. It simulates the entire pipeline to catch integration issues.
 
-## Maintenance & Support 🛡️
+#### System Tests
 
-**Current Version:** 1.0.0
+System tests validate the end-to-end application, including the UI.
 
-**Roadmap:**
-- Bug fixes and stability improvements
-- Enhanced multi-agent collaboration
-- More research domains and question types
-- Advanced report customization
-- Additional integrations (e.g., Notion, Slack)
+```python
+# tests/system/test_e2e.py
+import subprocess
+import time
+import requests
 
-**How to Report Issues:**
-- Please use the [GitHub Issues](https://github.com/zeeshier/deep-research-agent/issues) page to report bugs, request features, or ask for help.
-- Include clear steps to reproduce, expected behavior, and screenshots/logs if possible.
-## License 📜
+def test_streamlit_ui_loads():
+    proc = subprocess.Popen(["streamlit", "run", "src/app.py", "--server.headless=true"])
+    time.sleep(10)  # give it time to boot
+    try:
+        resp = requests.get("http://localhost:8501", timeout=5)
+        assert resp.status_code == 200
+        assert "Deep Research Agent" in resp.text
+    finally:
+        proc.terminate()
+        proc.wait()
+```
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+**Explanation**: This test launches the Streamlit app in headless mode, waits for it to start, and sends an HTTP request to verify the UI loads correctly (status 200) and contains the expected title. It ensures the full system, including the web interface, functions as intended.
 
-## Contact 📧
+### Safety Features 🔒
 
-For questions or feedback, open an issue on GitHub or contact the maintainer at [zeeshanwarraich51@gmail.com]. We'd love to hear from you! 😊
+#### Input Validation
 
+Prevents invalid or malicious inputs.
+
+```python
+# guardrails/input_validator.py
+def validate_input(user_text: str) -> bool:
+    MAX_LEN = 200
+    REJECTED_KEYWORDS = ["drop table", "delete from", "<script"]
+    if not isinstance(user_text, str) or len(user_text) > MAX_LEN:
+        return False
+    lowered = user_text.lower()
+    return not any(bad in lowered for bad in REJECTED_KEYWORDS)
+```
+
+**Explanation**: This function checks if the input is a string under 200 characters and doesn't contain SQL injection or XSS keywords. It returns True for safe inputs, blocking potential attacks early.
+
+#### Prompt Injection Protection
+
+Detects and blocks prompt injection attempts.
+
+```python
+# guardrails/prompt_injection.py
+import re
+
+PROMPT_INJ_PATTERN = re.compile(r"\b(ignore|disregard|forget|override).*\b(previous|instruction|prompt)\b", re.IGNORECASE)
+
+def detect_prompt_injection(text: str) -> bool:
+    return bool(PROMPT_INJ_PATTERN.search(text))
+```
+
+**Explanation**: Uses regex to scan for patterns like "ignore previous instructions," common in prompt injections. Returns True if detected, allowing the system to block harmful prompts.
+
+### User Interface Design 🖥️
+
+The Streamlit UI provides a simple, guided experience.
+
+```python
+# src/app.py
+import streamlit as st
+from graph import build_graph
+from monitoring.logger import get_logger
+from guardrails.input_validator import validate_input
+from guardrails.prompt_injection import detect_prompt_injection
+
+logger = get_logger("streamlit_ui")
+
+st.set_page_config(page_title="Deep Research Agent – M3", page_icon="🧠", layout="centered")
+
+st.title("🧠 Deep Research Agent – Production Ready")
+st.markdown("Module-3 Capstone – Agentic AI Developer Certification")
+
+topic = st.text_input("Research topic", placeholder="e.g., AI in healthcare")
+domain = st.text_input("Domain / Industry", placeholder="e.g., Health")
+
+if st.button("Start Research"):
+    if not topic.strip():
+        st.error("Topic cannot be empty.")
+        st.stop()
+    if not validate_input(topic) or not validate_input(domain):
+        st.error("Invalid or too-long input detected.")
+        st.stop()
+    if detect_prompt_injection(topic) or detect_prompt_injection(domain):
+        st.error("Potential prompt injection detected – request blocked.")
+        logger.warning("Blocked suspicious input: %s | %s", topic, domain)
+        st.stop()
+
+    logger.info("User started research: topic=%s domain=%s", topic, domain)
+
+    with st.spinner("🔄 Running multi-agent workflow…"):
+        try:
+            graph = build_graph()
+            state = graph.invoke({"topic": topic.strip(), "domain": domain.strip()})
+            report = state.get("report", "")
+            if not report:
+                st.error("No report generated.")
+                st.stop()
+
+            st.success("Report ready!")
+            st.download_button(
+                label="📄 Download HTML Report",
+                data=report,
+                file_name=f"{topic.replace(' ', '_')}_report.html",
+                mime="text/html",
+            )
+
+            st.components.v1.html(report, height=800, scrolling=True)
+
+        except Exception as exc:
+            logger.exception("Workflow failed")
+            st.error(f"Something went wrong: {exc}")
+```
+
+**Explanation**: This script sets up the Streamlit app with input fields for topic and domain. On button click, it validates inputs, runs the workflow via LangGraph, displays a spinner during processing, and renders the HTML report with a download option. Safety checks are integrated to prevent errors or attacks.
+
+### Failure Handling and Monitoring 🛡️
+
+#### Error Handling
+
+Catches and logs exceptions gracefully.
+
+```python
+# src/nodes/nodes.py
+from monitoring.logger import get_logger
+
+logger = get_logger("nodes")
+
+def research_agent_node(state: dict) -> dict:
+    try:
+        # Research logic here (e.g., LLM calls, web searches)
+        # Example: questions = llm.generate_questions(state["topic"], state["domain"])
+        return {"questions": questions}  # Placeholder for actual logic
+    except Exception as exc:
+        logger.error("Error during research: %s", exc)
+        return {"error": str(exc)}
+```
+
+**Explanation**: In each node (like research_agent_node), a try-except block wraps the core logic. If an error occurs (e.g., API failure), it's logged, and an error state is returned, preventing full system crashes.
+
+#### Logging
+
+Provides detailed, formatted logs for debugging.
+
+```python
+# monitoring/logger.py
+import logging
+
+def get_logger(name: str) -> logging.Logger:
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(name)s | %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    return logger
+```
+
+**Explanation**: This factory function creates a logger with INFO level, streaming output to console in a timestamped format. It's used across modules for consistent monitoring of events, warnings, and errors.
+
+### Deployment 🚀
+
+#### Docker
+
+Enables containerized, scalable deployment.
+
+```dockerfile
+# Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8501
+
+CMD ["streamlit", "run", "src/app.py", "--server.address=0.0.0.0"]
+```
+
+**Explanation**: This Dockerfile uses a slim Python base image, installs dependencies, copies the project, exposes the Streamlit port (8501), and runs the app. It allows easy deployment on platforms like Docker Hub, Kubernetes, or cloud services.
+
+## Conclusion 🎉
+
+The Deep Research Agent is a production-ready, AI-driven system that streamlines research workflows while prioritizing safety and usability. It showcases advanced agentic AI capabilities, from multi-agent orchestration to secure integrations. Future enhancements could include support for more LLMs, advanced analytics visualizations, or multi-domain expansions. This capstone project highlights readiness for real-world applications in research and analysis. 🚀
