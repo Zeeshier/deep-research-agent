@@ -1,6 +1,9 @@
-from typing_extensions import TypedDict
-from langgraph.graph.message import add_messages
-from typing import Annotated
+from typing import TypedDict, List, Optional
 
 class GraphState(TypedDict):
-    messages: Annotated[list, add_messages]
+    topic: str
+    domain: str
+    questions: Optional[List[str]]
+    findings: Optional[List[str]]
+    report: Optional[str]
+    error: Optional[str]
