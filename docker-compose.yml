@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env          # real credentials injected at runtime
+    volumes:
+      - .:/app        # mount source for hot-reload during dev
