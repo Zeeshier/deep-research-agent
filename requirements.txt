@@ -7,3 +7,5 @@ python-dotenv
 streamlit
 pydantic
 pydantic-settings
+fastapi
+uvicorn
