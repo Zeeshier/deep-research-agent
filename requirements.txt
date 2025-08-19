@@ -5,3 +5,5 @@ langchain_groq
 langchain_core
 python-dotenv
 streamlit
+pydantic
+pydantic-settings
