@@ -2,7 +2,7 @@ import streamlit as st
 import time
 from typing import Dict, Any, Optional
 
-from graph import build_graph
+from graph import WorkflowManager, WorkflowError
 from monitoring.logger import get_logger
 from guardrails.input_validator import validate_input
 from guardrails.prompt_injection import detect_prompt_injection
@@ -12,6 +12,8 @@ from nodes.nodes import NodeError, MaxRetriesExceededError
 MAX_RETRIES = 3
 RETRY_DELAY = 1  # seconds
 
+# Initialize workflow manager
+workflow_manager = WorkflowManager()
 logger = get_logger("streamlit_ui")
 
 def initialize_session_state() -> None:
@@ -54,7 +56,7 @@ def validate_inputs(topic: str, domain: str) -> tuple[bool, str]:
     return True, ""
 
 def run_research_workflow(topic: str, domain: str) -> Dict[str, Any]:
-    """Run the research workflow with retry logic.
+    """Run the research workflow with enhanced resilience patterns.
     
     Args:
         topic: The research topic
@@ -63,45 +65,27 @@ def run_research_workflow(topic: str, domain: str) -> Dict[str, Any]:
     Returns:
         dict: Result containing report, doc_url, or error information
     """
-    retry_count = 0
-    last_error = None
-    
-    while retry_count < MAX_RETRIES:
-        try:
-            graph = build_graph()
-            state = graph.invoke({"topic": topic.strip(), "domain": domain.strip()})
+    try:
+        # Execute the workflow using the workflow manager
+        result = workflow_manager.execute_workflow(topic.strip(), domain.strip())
+        
+        # Log the workflow execution status
+        if result["success"]:
+            logger.info("Workflow completed successfully")
+        else:
+            logger.error(f"Workflow failed: {result.get('error', 'Unknown error')}")
             
-            # Check if we have a report or an error
-            if "report" in state and state["report"]:
-                return {
-                    "success": True,
-                    "report": state["report"],
-                    "doc_url": state.get("doc_url", ""),
-                    "error": state.get("error", "")
-                }
-            else:
-                error_msg = state.get("error", "No report was generated.")
-                logger.error("Research failed: %s", error_msg)
-                return {"success": False, "error": error_msg}
-                
-        except MaxRetriesExceededError as e:
-            last_error = f"Operation failed after multiple attempts: {str(e)}"
-            logger.error(last_error, exc_info=True)
-            break
-            
-        except NodeError as e:
-            last_error = f"Research error: {str(e)}"
-            logger.error(last_error, exc_info=True)
-            break
-            
-        except Exception as e:
-            last_error = f"An unexpected error occurred: {str(e)}"
-            logger.error(last_error, exc_info=True)
-            retry_count += 1
-            if retry_count < MAX_RETRIES:
-                time.sleep(RETRY_DELAY * retry_count)  # Exponential backoff
-            
-    return {"success": False, "error": last_error or "An unknown error occurred"}
+        return result
+        
+    except WorkflowError as e:
+        error_msg = f"Workflow execution failed: {str(e)}"
+        logger.error(error_msg, exc_info=True)
+        return {"success": False, "error": error_msg}
+        
+    except Exception as e:
+        error_msg = f"An unexpected error occurred: {str(e)}"
+        logger.error(error_msg, exc_info=True)
+        return {"success": False, "error": error_msg}
 
 def main() -> None:
     """Main application function."""
