@@ -58,19 +58,7 @@ class ResourceLimitExceededError(ResilienceError):
     pass
 
 def validate_output(output: Any, model: Type[BaseModel]) -> BaseModel:
-    """
-    Validate and clean the output against a Pydantic model.
-    
-    Args:
-        output: The output to validate
-        model: The Pydantic model to validate against
-        
-    Returns:
-        Validated and cleaned output as an instance of the model
-        
-    Raises:
-        ValidationError: If the output cannot be validated
-    """
+
     try:
         if isinstance(output, dict):
             return model(**output)
@@ -97,23 +85,7 @@ def retry_with_backoff(
     exceptions: tuple = (Exception,),
     on_retry: Optional[Callable[[int, Exception], None]] = None,
 ) -> Callable[..., R]:
-    """
-    Decorator that retries a function with exponential backoff.
-    
-    Args:
-        func: The function to decorate
-        max_retries: Maximum number of retries
-        initial_delay: Initial delay between retries in seconds
-        max_delay: Maximum delay between retries in seconds
-        exponential_base: Base for exponential backoff
-        jitter: Whether to add random jitter to delays
-        exceptions: Tuple of exceptions to catch and retry on
-        on_retry: Optional callback function called on each retry
-                with attempt number and exception
-                
-    Returns:
-        Decorated function with retry logic
-    """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         delay = initial_delay
@@ -150,14 +122,7 @@ def retry_with_backoff(
     return wrapper
 
 class CircuitBreaker:
-    """
-    Implements the circuit breaker pattern to handle failing operations.
-    
-    The circuit breaker has three states:
-    - CLOSED: Operations proceed normally
-    - OPEN: Operations fail fast with CircuitOpenError
-    - HALF-OPEN: A limited number of test operations are allowed
-    """
+
     
     def __init__(
         self,
@@ -165,14 +130,7 @@ class CircuitBreaker:
         recovery_timeout: float = 300.0,  # 5 minutes
         name: str = "default",
     ):
-        """
-        Initialize the circuit breaker.
-        
-        Args:
-            failure_threshold: Number of failures before opening the circuit
-            recovery_timeout: Time in seconds before trying to close the circuit
-            name: Name of the circuit breaker for logging
-        """
+ 
         self.failure_threshold = failure_threshold
         self.recovery_timeout = recovery_timeout
         self.name = name
@@ -255,15 +213,7 @@ def resource_limit(
     max_file_size: Optional[int] = None,
     max_cpu_percent: Optional[float] = None,
 ):
-    """
-    Context manager for enforcing resource limits.
-    
-    Args:
-        max_memory_mb: Maximum memory usage in MB (not enforced on Windows)
-        timeout_seconds: Maximum execution time in seconds
-        max_file_size: Maximum file size in bytes (not enforced on Windows)
-        max_cpu_percent: Maximum CPU usage as a percentage (0-100)
-    """
+
     import platform
     import signal
     import os
@@ -304,7 +254,6 @@ def resource_limit(
             signal.signal(signal.SIGALRM, timeout_handler)
             signal.setitimer(signal.ITIMER_REAL, timeout_seconds)
         
-        # Set memory limit if specified
         if max_memory_mb is not None and hasattr(resource, 'RLIMIT_AS'):
             soft, hard = resource.getrlimit(resource.RLIMIT_AS)
             new_limit = max_memory_mb * 1024 * 1024  # Convert MB to bytes
@@ -318,37 +267,18 @@ def resource_limit(
         try:
             yield
         finally:
-            # Clean up signal handler
             if timeout_seconds is not None:
                 signal.setitimer(signal.ITIMER_REAL, 0)
                 signal.signal(signal.SIGALRM, original_handler)
 
 class StateValidator:
-    """Utility class for validating and cleaning agent state."""
     
     def __init__(self, schema: Dict[str, Any]):
-        """
-        Initialize with a schema defining expected state structure.
-        
-        Example schema:
-        {
-            "user_query": (str, "[MISSING_QUERY]"),
-            "documents": (list, []),
-            "step": (int, 0, lambda x: max(0, int(x))),
-        }
-        """
+
         self.schema = schema
     
     def validate(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Validate and clean the state dictionary.
-        
-        Args:
-            state: The state dictionary to validate
-            
-        Returns:
-            Validated and cleaned state dictionary
-        """
+
         validated = {}
         
         for key, (expected_type, default, *processors) in self.schema.items():
@@ -383,27 +313,12 @@ class IterationLimiter:
     """Utility for limiting iterations in loops and recursive operations."""
     
     def __init__(self, max_iterations: int, name: str = "operation"):
-        """
-        Initialize with maximum number of iterations.
-        
-        Args:
-            max_iterations: Maximum allowed iterations
-            name: Name for logging purposes
-        """
+
         self.max_iterations = max_iterations
         self.name = name
         self._count = 0
     
     def __call__(self) -> bool:
-        """
-        Check if the iteration limit has been reached.
-        
-        Returns:
-            True if the iteration should continue, False if the limit is reached
-            
-        Raises:
-            MaxRetriesExceededError: If the iteration limit is reached
-        """
         self._count += 1
         
         if self._count > self.max_iterations:
@@ -432,22 +347,7 @@ def with_retry(
     exceptions: tuple = (Exception,),
     on_retry: Optional[Callable[[int, Exception], None]] = None,
 ) -> Callable[..., R]:
-    """
-    Decorator that retries a function with exponential backoff.
-    
-    This is a more flexible alternative to the retry_with_backoff decorator,
-    allowing for both function decoration and direct usage as a context manager.
-    
-    Example usage as decorator:
-        @with_retry(max_retries=3)
-        def my_function():
-            # function implementation
-            pass
-    
-    Example usage as context manager:
-        with with_retry(max_retries=3) as retry:
-            result = retry(lambda: some_operation())
-    """
+
     if func is None:
         # Return a decorator with the specified parameters
         return lambda f: retry_with_backoff(
