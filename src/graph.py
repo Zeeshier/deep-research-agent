@@ -26,7 +26,6 @@ from resilience import (
     TimeoutError,
     ResourceLimitExceededError
 )
-# Direct imports since we're in the src directory
 from state import GraphState
 from monitoring.logger import get_logger
 from monitoring.metrics import timed
@@ -146,6 +145,9 @@ class WorkflowManager:
         self.config = get_config()
         if config:
             self.config.update(config)
+        
+        # Get max_iterations from config or use default (8 as per requirements)
+        self.max_iterations = self.config.get('max_iterations', 8)
         
         # Initialize circuit breakers for external services
         self.circuit_breakers = {
@@ -296,8 +298,38 @@ class WorkflowManager:
             lambda state: self.execute_node(save_report_node, state, "save_report")
         )
         
-        # Define the workflow edges
-        workflow.set_entry_point("generate_questions")
+        # Add iteration counter to state
+        def increment_iteration_counter(state: WorkflowState) -> WorkflowState:
+            """Increment the iteration counter and check against max_iterations."""
+            if not hasattr(state, 'iteration_count'):
+                state.iteration_count = 0
+            state.iteration_count += 1
+            
+            if state.iteration_count > self.max_iterations:
+                raise WorkflowError(
+                    f"Maximum iterations ({self.max_iterations}) exceeded. "
+                    "The workflow is taking too long to complete and has been terminated."
+                )
+            return state
+        
+        # Add a check before each node execution
+        def check_iteration_limit(state: WorkflowState) -> WorkflowState:
+            """Check if we've exceeded the maximum number of iterations."""
+            if hasattr(state, 'iteration_count') and state.iteration_count >= self.max_iterations:
+                raise WorkflowError(
+                    f"Maximum iterations ({self.max_iterations}) exceeded. "
+                    "The workflow is taking too long to complete and has been terminated."
+                )
+            return state
+        
+        # Add the iteration counter to the workflow
+        workflow.add_node("increment_iteration", increment_iteration_counter)
+        workflow.add_node("check_iteration_limit", check_iteration_limit)
+        
+        # Define the workflow edges with iteration checks
+        workflow.set_entry_point("increment_iteration")
+        workflow.add_edge("increment_iteration", "check_iteration_limit")
+        workflow.add_edge("check_iteration_limit", "generate_questions")
         workflow.add_edge("generate_questions", "research")
         workflow.add_edge("research", "save_report")
         workflow.add_edge("save_report", END)
